@@ -4,3 +4,374 @@
 *:after {
   box-sizing: border-box;
 }
+
+/******* Change Box Model ***************/
+
+:root {
+  --text: rgb(255, 242, 232);
+  --text1: rgb(0, 0, 0);
+  --heading-background-color: rgb(19, 66, 66);
+  --heading-background-color1: rgb(250, 205, 153);
+  --heading-background-color2: rgb(176, 202, 202);
+
+}
+
+body,
+.main-container,
+div {
+  text-align: left;
+  /*justify-content: flex-start;
+  align-items: flex-start;*/
+
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#inv-display li {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#inv-display li img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+#inv-display a {
+  font-size: 20px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+body {
+  background-color: white;
+  padding: 0 1rem;
+}
+
+header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-decoration: none;
+  align-self: start;
+}
+
+.navigation {
+  list-style-type: none;
+}
+
+.navigation a {
+  display: block;
+  padding: 0 0 0.5rem 0;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text);
+  transition: 0.5s;
+  font-size: 1.5rem;
+
+}
+
+.navigation {
+  display: flex;
+  gap: 2rem;
+  font-weight: 600;
+  justify-content: space-around;
+  padding: 1rem 2rem 0 2rem;
+  background-color: var(--heading-background-color);
+}
+nav .btn-primary,
+.navigation a {
+  display: block;
+  padding: 0 0 0.5rem 0;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text);
+  transition: 0.5s;
+  font-size: .5rem;
+}
+
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  height: 60px;
+}
+
+h1 {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 2rem;
+  color: #000;
+}
+
+#top-header #tools a {
+  text-decoration: none;
+  color: var(--text1);
+  font-weight: bold;
+  font-size: .8rem;
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 800px;
+
+}
+
+.banner .hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  padding: 2rem 0 0 0;
+}
+
+.own-today img {
+  width: 80px;
+  height: 30px;
+}
+
+.own-today {
+  background-color: rgb(176, 202, 202, 0.20);
+  color: var(--heading-background-color);
+  width: 100px;
+  height: 130px;
+  position: absolute;
+  bottom: 20px;
+  right: 55%;
+  font-size: 10px;
+  padding: 0;
+  margin: 0;
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.upgrades ul {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  padding: 1px;
+  text-align: center;
+
+}
+
+.upgrades a {
+  color: var(--text1);
+}
+
+.img-box {
+  background-color: var(--heading-background-color2);
+  border: 1px solid var(--heading-background-color);
+  width: 150px;
+  height: 100px;
+}
+
+
+.img-box img {
+  padding: 15px 40px;
+
+}
+
+.reviews li {
+  line-height: 1.5;
+  margin: 15px 0;
+}
+
+.reviews ul {
+  list-style-type: disc;
+  list-style-position: inherit;
+  padding-left: 20px;
+  margin: 0;
+  text-align: start;
+}
+
+.about>.reviews {
+  order: -1;
+}
+
+
+.flash-message {
+  background-color: #ffefef;
+  color: #a94442;
+  padding: 10px;
+  border: 1px solid #a94442;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+
+
+
+@media only screen and (min-width: 1025px) {
+  html {
+    background-image: url("/images/site/small_check.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .navigation ul {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  body {
+    /*background-color: white;
+    padding: 0 2rem;*/
+    align-items: center;
+    border-radius: 12px;
+    border: 5px solid var(--heading-background-color2);
+    width: 90%;
+    max-width: 1200px;
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: 2.5rem;
+    text-align: start;
+    padding: 0;
+  }
+
+  h2 {
+    font-size: 2rem;
+
+  }
+
+  .own-today {
+    width: 201px;
+    height: 220px;
+    position: absolute;
+    top: 20px;
+    right: 65%;
+    font-size: 1rem;
+  }
+
+  .own-today img {
+    width: 100%;
+    height: auto;
+  }
+
+  .banner {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 2rem auto;
+    max-width: 800px;
+  }
+
+  .banner .hero-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+  }
+
+  .about {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 5rem;
+  }
+
+  .reviews {
+    font-size: 1.5rem;
+  }
+
+  .about>.reviews,
+  .about>.upgrades {
+    order: 0;
+  }
+
+  .about>.reviews {
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .about h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-align: start;
+    font-size: 1.5rem;
+  }
+
+  .upgrades ul {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+
+  .upgrades li {
+    padding: 0;
+  }
+
+  .upgrades img {
+    width: 100px;
+    display: block;
+    margin: 10px auto 10px auto;
+    padding: 1rem 0;
+  }
+
+  .img-box {
+    width: 300px;
+    height: 150px;
+    text-align: center;
+  }
+
+  .navigation a {
+    font-size: x-large;
+  }
+
+  .navigation {
+    gap: 2rem;
+    font-weight: 600;
+    padding: 2rem;
+  }
+
+  nav .btn-primary {
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  #top-header #tools a {
+    font-size: 1rem;
+  }
+
+  footer {
+    padding-top: 1rem;
+  }
+}
