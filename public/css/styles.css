@@ -74,27 +74,24 @@ header {
 }
 
 .navigation {
-  list-style-type: none;
+  font-weight: 400;
+  padding: 1rem;
+  background-color: var(--heading-background-color);
+  color: var(--text);
 }
 
-.navigation a {
-  display: block;
-  padding: 0 0 0.5rem 0;
-  text-align: left;
+.navigation ul {
+  display: flex;
+  gap: .5rem;
+  justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation li a {
   text-decoration: none;
   color: var(--text);
-  transition: 0.5s;
-  font-size: 1.5rem;
-
-}
-
-.navigation {
-  display: flex;
-  gap: 2rem;
-  font-weight: 600;
-  justify-content: space-around;
-  padding: 1rem 2rem 0 2rem;
-  background-color: var(--heading-background-color);
 }
 nav .btn-primary,
 .navigation a {
