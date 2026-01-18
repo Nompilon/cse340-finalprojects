@@ -74,7 +74,7 @@ header {
 }
 
 .navigation {
-  font-weight: 400;
+  font-weight: 300;
   padding: 1rem;
   background-color: var(--heading-background-color);
   color: var(--text);
