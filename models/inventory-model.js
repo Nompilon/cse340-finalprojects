@@ -25,4 +25,14 @@ async function getInventoryByClassificationId(classification_id) {
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId};
+async function getVehicleById(invId) {
+  try {
+    const sql = "SELECT * FROM inventory WHERE inv_id = $1"
+    const result = await pool.query(sql, [invId])
+    return result.rows[0] // return single vehicle object
+  } catch (error) {
+    console.error("Error fetching vehicle:", error)
+    throw error
+  }
+}
+module.exports = {getClassifications, getInventoryByClassificationId, getVehicleById};
