@@ -590,8 +590,8 @@ div.register-page p a:hover {
   text-align: center;
 }
 .notice {
-  background-color: #ffe0e0;
-  color: #a00;
+  background-color: var(--text);
+  color: maroon;
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 15px;
