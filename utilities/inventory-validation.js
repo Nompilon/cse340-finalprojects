@@ -1,8 +1,10 @@
+const utilities = require(".")
 const { body, validationResult } = require("express-validator")
-const utilities = require("./")
+const validate = {}
+
 
 /* ----- classification Validation ----- */
-const classificationRules = () => {
+validate.classificationRules = () => {
   return [
     body("classification_name")
   .trim()
@@ -13,7 +15,7 @@ const classificationRules = () => {
   ]
 }
 
-const checkClassificationData = async (req, res, next) => {
+validate.checkClassificationData = async (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
@@ -29,7 +31,7 @@ const checkClassificationData = async (req, res, next) => {
 }
 
 /* ----- Inventory Validation ----- */
-const addInventoryRules = () => {
+validate.addInventoryRules = () => {
   return [
     // Make: required, min 2 characters
     body("inv_make")
@@ -104,22 +106,35 @@ const addInventoryRules = () => {
 }
 
 
-const checkInventoryData = async (req, res, next) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
+validate.checkInventoryData = async (req, res, next) => {
+  const result = validationResult(req)
+
+  if (!result.isEmpty()) {
     const nav = await require("../utilities").getNav()
     const classifications = await require("../utilities").buildClassificationList()
+
+    // Put sticky values into res.locals
+    res.locals.inv_make = req.body.inv_make
+    res.locals.inv_model = req.body.inv_model
+    res.locals.inv_year = req.body.inv_year
+    res.locals.inv_description = req.body.inv_description
+    res.locals.inv_price = req.body.inv_price
+    res.locals.inv_miles = req.body.inv_miles
+    res.locals.inv_color = req.body.inv_color
+    res.locals.classification_id = req.body.classification_id
+    res.locals.inv_image = req.body.inv_image
+    res.locals.inv_thumbnail = req.body.inv_thumbnail
+
     return res.render("inventory/add-inventory", {
       title: "Add Vehicle",
       nav,
       classifications,
-      errors: errors.array(),
-      messages: () => req.flash("notice"),
-      vehicle: req.body, // sticky
+      errors: result.array(),   // convert validationResult to array
+      messages: () => req.flash("notice")
     })
   }
   next()
 }
 
 
-module.exports = {classificationRules, checkClassificationData, addInventoryRules, checkInventoryData }
+module.exports = validate
