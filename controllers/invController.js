@@ -20,6 +20,101 @@ invCont.buildByClassificationId = async function (req, res, next) {
 }
 
 /* ***************************
+ * Build add classification view
+ * ************************** */
+invCont.buildAddClassification = async (req, res) => {
+  const nav = await utilities.getNav()
+  res.render("inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null,
+    classification_name: null
+  })
+}
+/* ***************************
+ * Handle adding new classification
+ * ************************** */
+invCont.addClassification = async (req, res, next) => {
+  try {
+    const { classification_name } = req.body
+    const addResult = await invModel.addClassification(classification_name)
+    const nav = await utilities.getNav()
+
+    if (addResult) {
+      req.flash("notice", "Classification successfully added!")
+      return res.redirect("/inv")
+    } else {
+      return res.render("inventory/add-classification", {
+        title: "Add Classification",
+        nav,
+        errors: [{ msg: "Failed to add classification. Try again." }],
+        classification_name
+      })
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+/* ***************************
+ * Build add inventory view
+ * ************************** */
+invCont.buildAddInventory = async (req, res, next) => {
+  try {
+    const nav = await utilities.getNav()
+    const classifications = await utilities.getClassificationOptions()
+
+    res.render("inventory/add-inventory", {
+      title: "Add Vehicle",
+      nav,
+      errors: null,
+      classifications,
+      vehicle: {} // empty object for sticky form
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+/* ***************************
+ * Handle adding new inventory
+ * ************************** */
+invCont.addInventory = async (req, res, next) => {
+  try {
+    const vehicleData = {
+      ...req.body,
+      inv_image: req.body.inv_image || "/images/no-image-available.png",
+      inv_thumbnail: req.body.inv_thumbnail || "/images/no-image-available-thumb.png"
+    }
+
+    const result = await invModel.addInventory(vehicleData)
+
+    if (result) {
+      req.flash(
+        "notice",
+        `Vehicle ${vehicleData.inv_make} ${vehicleData.inv_model} added successfully!`
+      )
+      return res.redirect("/inv")
+    } else {
+  const classifications = await utilities.getClassificationOptions()
+
+  return res.render("inventory/add-inventory", {
+    title: "Add Vehicle",
+    nav: await utilities.getNav(),
+    errors: [{ msg: "Failed to add vehicle. Please try again." }],
+    classifications,
+    vehicle: vehicleData
+  })
+}
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+/* ***************************
  *  Build single vehicle detail view
  * ************************** */
 invCont.buildDetailView = async function (req, res, next) {
@@ -49,5 +144,17 @@ invCont.buildDetailView = async function (req, res, next) {
     next(error)
   }
 }
+
+/* ***************************
+ *  Build Management view
+ * ************************** */
+invCont.buildManagement = async (req, res) => {
+  const nav = await utilities.getNav()
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav
+  })
+}
+
 
 module.exports = invCont

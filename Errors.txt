@@ -1,0 +1,9 @@
+W03 Team Activity: Debugging MVC
+Which of the bugs introduced in this activity was the most difficult to track down? Why was it harder than the others?
+One of the most difficult bugs to track down was when the model returned data instead of data.rows after getting the information from the database. Even with breakpoints, it was hard to notice at first because the controller only showed that the result was “undefined”, without clearly pointing to the real mistake. The debugger led me step-by-step through the controller, and only then I realized that the wrong return value in the model was causing the problem. This made it harder than the other bugs because the error appeared in a different file than where the real issue actually was.
+ 
+What kind of bugs do you think will be the most common in an MVC application?
+I think the most common bugs in an MVC application will be problems in the communication between the Model, View, and Controller.
+ 
+What was the most important thing you learned from this activity about tracking down bugs?
+The most important thing I learned from this activity is that I should not guess where the bug is, but use the debugger in a systematic way. Setting breakpoints and stepping through the code helped me see the real values of the variables and the exact moment when something went wrong

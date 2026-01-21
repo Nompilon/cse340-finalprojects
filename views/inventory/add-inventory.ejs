@@ -1,0 +1,67 @@
+<div class="form-page">
+    <h1><%= title %></h1>
+
+    <!-- Flash messages -->
+    <%- messages() %>
+    
+    <!-- Server-side validation errors -->
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.forEach(error=> { %>
+                <li>
+                    <%= error.msg %>
+                </li>
+                    <% }) %>
+        </ul>
+            <% }
+        %>
+
+        <form action="/inv/add-inventory" method="POST" onsubmit="return validateInventory();" class="vehicle-form">
+        
+            <label for="inv_make">Make</label>
+            <input type="text" id="inv_make" name="inv_make" value="<%= vehicle.inv_make || '' %>">
+            <span id="inv_makeError" class="error"></span>
+        
+            <label for="inv_model">Model</label>
+            <input type="text" id="inv_model" name="inv_model" value="<%= vehicle.inv_model || '' %>">
+            <span id="inv_modelError" class="error"></span>
+        
+            <label for="inv_year">Year</label>
+            <input type="number" id="inv_year" name="inv_year" value="<%= vehicle.inv_year || '' %>">
+            <span id="inv_yearError" class="error"></span>
+        
+            <label for="inv_description">Description</label>
+            <textarea id="inv_description" name="inv_description"><%= vehicle.inv_description || '' %></textarea>
+            <span id="inv_descriptionError" class="error"></span>
+        
+            <label for="inv_image">Image URL</label>
+            <input type="text" id="inv_image" name="inv_image" value="<%= vehicle.inv_image || '' %>">
+            <span id="inv_imageError" class="error"></span>
+        
+            <label for="inv_thumbnail">Thumbnail URL</label>
+            <input type="text" id="inv_thumbnail" name="inv_thumbnail" value="<%= vehicle.inv_thumbnail || '' %>">
+            <span id="inv_thumbnailError" class="error"></span>
+        
+            <label for="inv_price">Price</label>
+            <input type="number" id="inv_price" name="inv_price" value="<%= vehicle.inv_price || '' %>">
+            <span id="inv_priceError" class="error"></span>
+        
+            <label for="inv_miles">Miles</label>
+            <input type="number" id="inv_miles" name="inv_miles" value="<%= vehicle.inv_miles || '' %>">
+            <span id="inv_milesError" class="error"></span>
+        
+            <label for="inv_color">Color</label>
+            <input type="text" id="inv_color" name="inv_color" value="<%= vehicle.inv_color || '' %>">
+            <span id="inv_colorError" class="error"></span>
+        
+            <label for="classification_id">Classification</label>
+            <select id="classification_id" name="classification_id">
+                <%- classifications %>
+            </select>
+            <span id="classification_idError" class="error"></span>
+        
+            <button type="submit">Add Vehicle</button>
+        </form>
+</div>
+
+
