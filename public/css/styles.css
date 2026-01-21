@@ -76,7 +76,7 @@ header {
 }
 
 .navigation {
-  font-weight: 300;
+  font-weight: 200;
   padding: 1rem;
   background-color: var(--heading-background-color);
   color: var(--text);
@@ -103,7 +103,7 @@ header {
   text-decoration: none;
   color: var(--text);
   transition: 0.5s;
-  font-size: .5rem;
+  font-size: .4rem;
 }
 
 #top-header {
