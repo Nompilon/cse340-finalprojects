@@ -52,4 +52,24 @@ router.post(
   utilities.handleErrors(invController.addInventory)
 )
 
+router.get(
+  "/getInventory/:classification_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.getInventoryJSON)
+)
+
+// Edit inventory view
+router.get(
+  "/edit/:inv_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildEditInventory)
+)
+
+router.post(
+  "/update",
+  invValidate.addInventoryRules(),
+  invValidate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+)
+
 module.exports = router;

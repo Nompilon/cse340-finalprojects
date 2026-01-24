@@ -16,7 +16,7 @@
         <% } %>
 
 
-   <form action="/inv/add-inventory" method="POST" onsubmit="return validateInventory();" class="vehicle-form">
+   <form action="/inv/update" method="POST" onsubmit="return validateInventory();" class="vehicle-form">
         
         <label for="inv_make">Make</label>
         <input type="text" id="inv_make" name="inv_make" required value="<%= locals.inv_make %>">
@@ -57,7 +57,9 @@
         <%- classificationSelect %>
         <span id="classification_idError" class="error"></span>
         
-        <button type="submit">Add Vehicle</button>
+        <button type="submit">Update Vehicle</button>
+        <input type="hidden" name="inv_id" <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+            <% } %>>
     </form>
 </div>
 

@@ -96,12 +96,14 @@ validate.addInventoryRules = () => {
     // Optional fields for image URLs: must be valid URLs if provided
     body("inv_image")
       .optional({ checkFalsy: true })
-      .isURL()
-      .withMessage("Image must be a valid URL"),
+      .matches(/^(https?:\/\/.+|\/images\/.+)$/)
+      .withMessage("Image must be a valid URL or image path"),
+
     body("inv_thumbnail")
       .optional({ checkFalsy: true })
-      .isURL()
-      .withMessage("Thumbnail must be a valid URL"),
+      .matches(/^(https?:\/\/.+|\/images\/.+)$/)
+      .withMessage("Image must be a valid URL or image path"),
+
   ]
 }
 
@@ -111,7 +113,7 @@ validate.checkInventoryData = async (req, res, next) => {
 
   if (!result.isEmpty()) {
     const nav = await require("../utilities").getNav()
-    const classifications = await require("../utilities").buildClassificationList()
+    const classificationSelect = await require("../utilities").buildClassificationList()
 
     // Put sticky values into res.locals
     res.locals.inv_make = req.body.inv_make
@@ -128,7 +130,7 @@ validate.checkInventoryData = async (req, res, next) => {
     return res.render("inventory/add-inventory", {
       title: "Add Vehicle",
       nav,
-      classifications,
+      classificationSelect,
       errors: result.array(),   // convert validationResult to array
       messages: () => req.flash("notice")
     })
@@ -136,5 +138,36 @@ validate.checkInventoryData = async (req, res, next) => {
   next()
 }
 
+validate.checkUpdateData = async (req, res, next) => {
+  const result = validationResult(req)
+
+  if (!result.isEmpty()) {
+    const nav = await require("../utilities").getNav()
+    const classificationSelect =
+  await require("../utilities").buildClassificationList(req.body.classification_id)
+    // Put sticky values into res.locals
+    res.locals.inv_make = req.body.inv_make
+    res.locals.inv_model = req.body.inv_model
+    res.locals.inv_year = req.body.inv_year
+    res.locals.inv_description = req.body.inv_description
+    res.locals.inv_price = req.body.inv_price
+    res.locals.inv_miles = req.body.inv_miles
+    res.locals.inv_color = req.body.inv_color
+    res.locals.classification_id = req.body.classification_id
+    res.locals.inv_image = req.body.inv_image
+    res.locals.inv_thumbnail = req.body.inv_thumbnail
+
+    const inv_id = req.body.inv_id
+    return res.render("inventory/edit-inventory", {
+      title: "Edit Vehicle",
+      nav,
+      classificationSelect,
+      errors: result.array(),   // convert validationResult to array
+      //messages: () => req.flash("notice"),
+      inv_id: req.body.inv_id
+    })
+  }
+  next()
+}
 
 module.exports = validate

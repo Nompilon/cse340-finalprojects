@@ -1,5 +1,7 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -153,5 +155,92 @@ Util.buildClassificationList = async function (classification_id = null) {
  **************************************** */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
+
+
+/* ****************************************
+* Middleware to check token validity
+
+
+Util.checkJWTToken = (req, res, next) => {
+  const token = req.cookies?.jwt
+
+  if (!token) {
+    res.locals.loggedin = 0
+    return next()
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
+    if (err) {
+      res.clearCookie("jwt")
+      res.locals.loggedin = 0
+      return next()
+    }
+
+    res.locals.accountData = accountData
+    res.locals.loggedin = 1
+    next()
+  })
+}
+**************************************** */
+
+Util.checkJWTToken = (req, res, next) => {
+  const token = req.cookies?.jwt; // optional chaining in case cookies undefined
+  if (token) {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        // Token invalid — log out
+        res.clearCookie('jwt');
+        res.locals.accountData = null; // VERY IMPORTANT
+        res.locals.loggedin = false;
+        return next();
+      }
+      // Token valid — save account info
+      res.locals.accountData = decoded; // this is what EJS reads
+      res.locals.loggedin = true;
+      next();
+    });
+  } else {
+    // No token
+    res.locals.accountData = null;
+    res.locals.loggedin = false;
+    next();
+  }
+};
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+ Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+ }
+
+ Util.checkAccountType = (req, res, next) => {
+  try {
+    // Must be logged in first
+    if (!res.locals.accountData) {
+      req.flash("notice", "Please log in to continue.")
+      return res.redirect("/account/login")
+    }
+
+    const accountType = res.locals.accountData.account_type
+
+    // Allow only Employee or Admin to access certain routes
+    if (accountType === "Employee" || accountType === "Admin") {
+      return next()
+    }
+
+    // Client accounts are blocked
+    req.flash("notice", "You are not authorized to access this resource.")
+    return res.redirect("/account/")
+  } catch (error) {
+    console.error("checkAccountType error:", error)
+    req.flash("notice", "Access denied.")
+    return res.redirect("/")
+  }
+}
 
 module.exports = Util

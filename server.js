@@ -5,10 +5,11 @@
 /* ***********************
  * Require Statements
  *************************/
+const express = require("express")
+const bodyParser = require("body-parser")
 const session = require("express-session")
 const pool = require('./database/')
 const baseController = require("./controllers/baseController")
-const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
@@ -17,11 +18,13 @@ const inventoryRoute = require("./routes/inventoryRoute")
 const errorRoute = require("./routes/errorRoute")
 const accountRoute = require("./routes/accountRoute")
 const utilities = require("./utilities/")
-const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+
 
 /* ***********************
  * Middleware
  * ************************/
+app.use(cookieParser())
  app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -36,13 +39,14 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
+
  // Express Messages Middleware
 app.use(require('connect-flash')())
 app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
-
+app.use(utilities.checkJWTToken)
 /* ***********************
  * View Engine and Templates
  *************************/

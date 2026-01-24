@@ -4,14 +4,32 @@
     <!-- Flash message -->
     <%- messages() %>
 
-        <!-- Links to other views -->
-        <div class="man-btn">
-            <ul>
-                <li><a href="/inv/add-classification">Add New Classification</a></li>
-                <li><a href="/inv/add">Add New Inventory Item</a></li>
-            </ul>
-        </div>
+    <!-- Links to other views -->
+    <div class="man-btn">
+        <ul>
+            <li><a href="/inv/add-classification">Add New Classification</a></li>
+            <li><a href="/inv/add">Add New Inventory Item</a></li>
+        </ul>
+    </div>
+    <!-- REQUIRED HEADING -->
+    <h2>Manage Inventory</h2>
+
+    <!-- REQUIRED PARAGRAPH -->
+    <p>Please select a classification to see the inventory items.</p>
+
+    <!-- REQUIRED SELECT LIST -->
+    <div class="classification-select">
+    <%- classificationSelect %>
+    </div>
+
+    <!-- REQUIRED EMPTY TABLE -->
+    <table id="inventoryDisplay"></table>
+
+    <!-- REQUIRED noscript MESSAGE -->
+    <noscript>JavaScript must be enabled to use this page.</noscript>
+    <script src="/js/inventory.js"></script>
 </div>
+
 
 
     

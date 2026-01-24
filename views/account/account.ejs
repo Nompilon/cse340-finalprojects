@@ -1,0 +1,42 @@
+<div class="form-page">
+    <h1>
+        <%= title %>
+    </h1>
+    <!-- Flash messages -->
+    <%- messages() %>
+    <!-- Validation errors (if any) -->
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error=> { %>
+                <li>
+                    <%= error.msg %>
+                </li>
+                <% }) %>
+        </ul>
+        <% } %>
+    
+    <!-- Welcome message -->
+    <% if (accountData) { %>
+        <h2>Welcome <%= accountData.account_firstname %>
+        </h2>
+        <p class="notice">Congratulations! You're logged in 🥳🕺🕺💃💃</p>
+        <% } else { %>
+            <h2>Welcome Guest</h2>
+            <p class="notice">Congradulations! You're logged in 🥳🕺🕺💃💃</p>
+            <% } %>
+    <!-- Update account information link (visible to all users) -->
+    <div class="man-btn"><p >
+        <a href="/account/edit/<%= accountData.account_id %>">
+            Update Account Information
+        </a>
+    </p>
+    </div>
+    <% if ( accountData.account_type==="Employee" || accountData.account_type==="Admin" ) { %>
+        <h3>Inventory Management</h3>
+        <div class="man-btn"><p class="man-btn">
+            <a href="/inv/">Manage Inventory</a>
+        </p>
+        </div>
+        <% } %>
+    
+</div>

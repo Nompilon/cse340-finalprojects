@@ -608,12 +608,38 @@ div.register-page p a:hover {
   border-radius: 4px;
   margin-bottom: 1rem;
 }
-.btn {
+td {
   text-decoration: none;
-  padding: 0.9rem 1.5rem;
+
+  padding: 0.9rem 1.5rem 0.9rem 0;
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
+  display: inline-block;
+  transition: 0.25s ease;
+}
+td a {
+  text-decoration: none;
+  background-color: #0003b3;
+  color: var(--text);
+  padding: .5rem;
+  border-radius: 9px;
+
+}
+
+td a:hover {
+  background-color: #4f89cc;
+  color: var(--text1);
+}
+.man-btn p {
+  text-decoration: none;
+  padding: 0.9rem 1.5rem;
+  border-radius: 6px;
+  margin-right: 1.8rem;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: var(--heading-background-color1);
+  color: var(--text1);
   display: inline-block;
   transition: 0.25s ease;
 }
