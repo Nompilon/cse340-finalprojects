@@ -139,4 +139,20 @@ async function updateInventory(
     console.error("updateInventory error:" + error)
   }
 }
-module.exports = {getClassifications, getInventoryByClassificationId, getVehicleById, addClassification, addInventory, getInventoryById, updateInventory };
+
+async function deleteInventory(inv_id) {
+  try {
+    const sql = `
+      DELETE FROM inventory
+      WHERE inv_id = $1
+      RETURNING inv_make, inv_model
+    `
+    const data = await pool.query(sql, [inv_id])
+    return data.rows[0]
+  } catch (error) {
+    console.error("deleteInventory error:" + error)
+  }
+}
+
+
+module.exports = {getClassifications, getInventoryByClassificationId, getVehicleById, addClassification, addInventory, getInventoryById, updateInventory, deleteInventory };

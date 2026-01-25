@@ -98,15 +98,12 @@ validate.addInventoryRules = () => {
       .optional({ checkFalsy: true })
       .matches(/^(https?:\/\/.+|\/images\/.+)$/)
       .withMessage("Image must be a valid URL or image path"),
-
     body("inv_thumbnail")
       .optional({ checkFalsy: true })
       .matches(/^(https?:\/\/.+|\/images\/.+)$/)
       .withMessage("Image must be a valid URL or image path"),
-
   ]
 }
-
 
 validate.checkInventoryData = async (req, res, next) => {
   const result = validationResult(req)
@@ -144,7 +141,7 @@ validate.checkUpdateData = async (req, res, next) => {
   if (!result.isEmpty()) {
     const nav = await require("../utilities").getNav()
     const classificationSelect =
-  await require("../utilities").buildClassificationList(req.body.classification_id)
+  await require("../utilities").buildClassificationList()
     // Put sticky values into res.locals
     res.locals.inv_make = req.body.inv_make
     res.locals.inv_model = req.body.inv_model

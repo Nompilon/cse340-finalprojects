@@ -53,8 +53,11 @@
         <label for="inv_color">Color</label>
         <input type="text" id="inv_color" name="inv_color" required value="<%= locals.inv_color %>">
         <span id="inv_colorError" class="error"></span>
+
         <label for="classificationList">Classification</label>
-        <%- classificationSelect %>
+        <select id="classification_id" name="classification_id">
+            <%- classificationSelect %>
+        </select>
         <span id="classification_idError" class="error"></span>
         
         <button type="submit">Add Vehicle</button>
