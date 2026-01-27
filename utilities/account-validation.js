@@ -107,5 +107,88 @@ validate.checkLoginData = async (req, res, next) => {
   next()
 }
 
+/* *********************************
+ * Account Update Validation Rules
+ * ********************************* */
+validate.updateAccountRules = () => {
+  return [
+    body("account_firstname").trim().notEmpty().withMessage("First name is required."),
+    body("account_lastname").trim().notEmpty().withMessage("Last name is required."),
+    body("account_email").trim().isEmail().withMessage("Valid email is required.")
+      .custom(async (email, { req }) => {
+        const accountModel = require('../models/account-model')
+        const existingAccount = await accountModel.getAccountByEmail(email)
+        if (existingAccount && existingAccount.account_id != req.body.account_id) {
+          throw new Error("Email already exists.")
+        }
+      })
+  ]
+}
+
+/* ******************************
+ * Check Account Update Data
+ * ***************************** */
+validate.checkUpdateAccountData = async (req, res, next) => {
+  let errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors,
+      accountData: req.body
+    })
+    return
+  }
+  next()
+}
+
+/* *********************************
+ * Password Validation Rules
+ * ********************************* */
+validate.passwordRules = () => {
+  return [
+    body("account_password")
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet security requirements.")
+  ]
+}
+
+/* ******************************
+ * Check Password Data
+ * ***************************** */
+validate.checkPasswordData = async (req, res, next) => {
+  let errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors,
+      accountData: req.body
+    })
+    return
+  }
+  next()
+}
+ 
+// Password update rules
+validate.updatePasswordRules = () => {
+  return [
+    body("account_password")
+      .isLength({ min: 12 }).withMessage("Password must be at least 12 characters.")
+      .matches(/[A-Z]/).withMessage("Password must contain a capital letter.")
+      .matches(/[0-9]/).withMessage("Password must contain a number.")
+      .matches(/[^A-Za-z0-9]/).withMessage("Password must contain a special character.")
+  ]
+}
 
 module.exports = validate

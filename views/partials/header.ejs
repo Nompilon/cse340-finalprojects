@@ -6,6 +6,11 @@
         <% if (locals.accountData) { %>
             <!-- Only visible when logged in -->
             <a title="Go to your account" href="/account">Welcome <%= accountData.account_firstname %></a>
+
+            <% if (accountData.account_type==="Employee" || accountData.account_type==="Admin" ) { %>
+                <a title="Inventory management" href="/inv/">Inventory Management</a>
+            
+                <% } %>
             <a title="Click to log out" href="/account/logout">Logout</a>
             <% } else { %>
                 <!-- Only visible when not logged in -->

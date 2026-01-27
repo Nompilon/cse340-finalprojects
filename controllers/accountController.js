@@ -95,8 +95,8 @@ async function buildManagement(req, res) {
     let nav = await utilities.getNav()
     const message = req.flash("message")
 
-    res.render("inventory/management", {
-        title: "Inventory Management",
+    res.render("account/account", {
+        title: "Account Management",
       nav, 
       message
         
@@ -132,7 +132,7 @@ async function accountLogin(req, res) {
       return res.redirect("/account/")
     }
     else {
-      req.flash("message notice", "Please check your credentials and try again.")
+      req.flash("notice", "Please check your credentials and try again.")
       res.status(400).render("account/login", {
         title: "Login",
         nav,
@@ -160,42 +160,134 @@ async function buildAccountJWT(req, res, next) {
   })
 }
 
+async function buildUpdateAccount(req, res) {
+  let nav = await utilities.getNav()
+  const account_id = req.params.account_id
+  const loggedInId = res.locals.accountData.account_id
+  const requestedId = parseInt(account_id)
+
+  if (loggedInId !== requestedId) {
+    req.flash("notice", "You are not authorized to update this account.")
+    return res.redirect("/account/")
+  }
+
+  // Add account_id to locals (and first/last/email if you like)
+  res.locals.account_id = account_id
+  res.locals.account_firstname = res.locals.accountData.account_firstname
+  res.locals.account_lastname = res.locals.accountData.account_lastname
+  res.locals.account_email = res.locals.accountData.account_email
+
+  res.render("account/update-account", {
+    title: "Update Account",
+    nav,
+    errors: null
+  })
+}
+
+async function updateAccount (req, res, next) {
+  const nav = await utilities.getNav(res.locals.accountData)
+  const { account_firstname, account_lastname, account_email } = req.body
+  const account_id = res.locals.accountData.account_id // always use logged-in user ID
+
+  try {
+    const updateResult = await accountModel.updateAccount(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    )
+
+    if (updateResult) {
+      req.flash("notice", "Account information updated successfully.")
+      res.redirect("/account/")
+    } else {
+      req.flash("notice", "Sorry, the update failed.")
+      res.render("account/update-account", {
+        title: "Update Account",
+        nav,
+        errors: null,
+        accountData: {
+          account_id,
+          account_firstname,
+          account_lastname,
+          account_email
+        }
+      })
+    }
+  } catch (error) {
+    console.error(error)
+    req.flash("notice", "An unexpected error occurred.")
+    res.redirect("/account/")
+  }
+}
+
+
+async function updatePassword(req, res) {
+  const { account_id, account_password } = req.body
+
+  if (!account_id) {
+    req.flash("notice", "Account ID missing. Cannot update password.")
+    return res.redirect("/account/")
+  }
+
+  const hashedPassword = await bcrypt.hash(account_password, 10)
+  const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
+
+  if (updateResult) {
+    req.flash("notice", "Password updated successfully.")
+    res.redirect("/account/")
+  } else {
+    req.flash("notice", "Password update failed.")
+    res.redirect("/account/")
+  }
+}
 
 
 /* ****************************************
-*  Build account management view (JWT)
+*  Validation Middleware
+* *************************************** */
+const updateAccountRules = () => [
+  body("account_firstname").trim().notEmpty().withMessage("First name is required."),
+  body("account_lastname").trim().notEmpty().withMessage("Last name is required."),
+  body("account_email").trim().isEmail().withMessage("Valid email is required.")
+    .custom(async (email, { req }) => {
+      const existingAccount = await accountModel.getAccountByEmail(email)
+      if (existingAccount && existingAccount.account_id != req.body.account_id) {
+        throw new Error("Email already exists.")
+      }
+    })
+]
 
-async function buildAccountJWT(req, res, next) {
+const updatePasswordRules = () => [
+  body("account_password")
+    .isLength({ min: 12 }).withMessage("Password must be at least 12 characters.")
+    .matches(/[A-Z]/).withMessage("Password must contain a capital letter.")
+    .matches(/[0-9]/).withMessage("Password must contain a number.")
+    .matches(/[^A-Za-z0-9]/).withMessage("Password must contain a special character.")
+]
+
+/* ****************************************
+ *  Logout
+ * *************************************** */
+async function accountLogout(req, res) {
   try {
-    const nav = await utilities.getNav()
-    const accountData = res.locals.accountData
+    
+    res.clearCookie("jwt")
 
-    // Get flash messages (notice, success, error)
-    const notice = req.flash("notice")
-    const success = req.flash("success")
-    const error = req.flash("error")
+      if (req.session) {
+      req.session.destroy(err => {
+        if (err) console.error("Session destruction error:", err)
+      });
+    }
 
-    res.render("account/account", {
-      title: "Account Management",
-      nav,
-      accountData,
-      errors: null,  // validation errors if any
-      notice,
-      success,
-      error
-    })
-  } catch (err) {
-    console.error("Error building account page:", err)
-    res.status(500).render("account/account", {
-      title: "Account Management",
-      nav: [],
-      accountData: {},
-      errors: null,
-      notice: ["An unexpected error occurred. Please try again."],
-      success: [],
-      error: []
-    })
+        req.flash("notice", "You have successfully logged out.")
+
+    res.redirect("/")
+  } catch (error) {
+    console.error("Logout error:", error)
+    res.redirect("/")
   }
 }
-* *************************************** */
-module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin, buildAccountJWT }
+
+
+module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin, buildAccountJWT, buildUpdateAccount, updateAccount, updatePassword, updateAccountRules, updatePasswordRules, accountLogout }

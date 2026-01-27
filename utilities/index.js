@@ -6,7 +6,7 @@ require("dotenv").config()
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function () {
+Util.getNav = async function (accountData = null) {
   let data = await invModel.getClassifications()
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
@@ -22,8 +22,11 @@ Util.getNav = async function () {
       "</a>"
     list += "</li>"
   })
-  list += '<li><a href="/inv/add" title="Add a new inventory item">Add Inventory </a></li>'
-
+  
+// Only add "Add Inventory" link for Employee or Admin
+  if (accountData && (accountData.account_type === "Employee" || accountData.account_type === "Admin")) {
+    list += '<li><a href="/inv/add-inventory" title="Add a new inventory item">Add Inventory</a></li>'
+  }
   list += "</ul>"
   return list
 }
@@ -83,6 +86,9 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
+/* ******************************************
+ * Get classification options
+ ****************************************** */
 Util.getClassificationOptions = async function () {
   const data = await invModel.getClassifications(); // returns rows
   let options = '<option value="">Select a classification</option>'
@@ -159,43 +165,20 @@ Util.handleErrors = (fn) => (req, res, next) =>
 
 /* ****************************************
 * Middleware to check token validity
-
-
-Util.checkJWTToken = (req, res, next) => {
-  const token = req.cookies?.jwt
-
-  if (!token) {
-    res.locals.loggedin = 0
-    return next()
-  }
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
-    if (err) {
-      res.clearCookie("jwt")
-      res.locals.loggedin = 0
-      return next()
-    }
-
-    res.locals.accountData = accountData
-    res.locals.loggedin = 1
-    next()
-  })
-}
 **************************************** */
-
 Util.checkJWTToken = (req, res, next) => {
-  const token = req.cookies?.jwt; // optional chaining in case cookies undefined
+  const token = req.cookies?.jwt; 
   if (token) {
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
       if (err) {
         // Token invalid — log out
         res.clearCookie('jwt');
-        res.locals.accountData = null; // VERY IMPORTANT
+        res.locals.accountData = null; 
         res.locals.loggedin = false;
         return next();
       }
       // Token valid — save account info
-      res.locals.accountData = decoded; // this is what EJS reads
+      res.locals.accountData = accountData; 
       res.locals.loggedin = true;
       next();
     });
@@ -209,6 +192,7 @@ Util.checkJWTToken = (req, res, next) => {
 /* ****************************************
  *  Check Login
  * ************************************ */
+
  Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
     next()
@@ -218,29 +202,26 @@ Util.checkJWTToken = (req, res, next) => {
   }
  }
 
- Util.checkAccountType = (req, res, next) => {
-  try {
-    // Must be logged in first
-    if (!res.locals.accountData) {
-      req.flash("notice", "Please log in to continue.")
-      return res.redirect("/account/login")
-    }
-
-    const accountType = res.locals.accountData.account_type
-
-    // Allow only Employee or Admin to access certain routes
-    if (accountType === "Employee" || accountType === "Admin") {
-      return next()
-    }
-
-    // Client accounts are blocked
-    req.flash("notice", "You are not authorized to access this resource.")
-    return res.redirect("/account/")
-  } catch (error) {
-    console.error("checkAccountType error:", error)
-    req.flash("notice", "Access denied.")
-    return res.redirect("/")
+/* ****************************************
+ *  Check Account Type
+* ************************************ */
+Util.checkAccountType = (req, res, next) => {
+  // Must be logged in first
+  if (!res.locals.accountData) {
+    req.flash("notice", "Please log in with an authorized account.")
+    return res.redirect("/account/login")
   }
+
+  const accountType = res.locals.accountData.account_type
+
+  // Allow only Employee or Admin
+  if (accountType === "Employee" || accountType === "Admin") {
+    return next()
+  }
+
+  // Unauthorized account type
+  req.flash("notice", "You are not authorized to access that resource.")
+  return res.redirect("/account/login")
 }
 
 module.exports = Util

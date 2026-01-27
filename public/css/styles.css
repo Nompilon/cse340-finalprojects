@@ -724,6 +724,34 @@ td a:hover {
   }
 }
 
+#tools a{
+padding-left: 1rem;
+color: var(--text1);
+transition: color 0.2s ease;
+}
+
+#tools a:hover,
+#tools a:focus {
+  color: tomato !important;
+}
+
+fieldset{
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  border: none;
+}
+
+fieldset legend{
+  font-size: x-large;
+  font-weight:600;
+  color: var(--heading-background-color);
+}
+
+form.account-form fieldset {
+  background-color: var(--heading-background-color1);
+ 
+}
+
 @media only screen and (min-width: 1025px) {
   html {
     background-image: url("/images/site/small_check.jpg");

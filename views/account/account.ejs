@@ -26,10 +26,10 @@
             <% } %>
     <!-- Update account information link (visible to all users) -->
     <div class="man-btn"><p >
-        <a href="/account/edit/<%= accountData.account_id %>">
+        <a href="/account/update/<%= accountData.account_id %>">
             Update Account Information
         </a>
-    </p>
+        </p>
     </div>
     <% if ( accountData.account_type==="Employee" || accountData.account_type==="Admin" ) { %>
         <h3>Inventory Management</h3>
