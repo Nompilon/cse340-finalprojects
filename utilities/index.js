@@ -25,7 +25,7 @@ Util.getNav = async function (accountData = null) {
   
 // Only add "Add Inventory" link for Employee or Admin
   if (accountData && (accountData.account_type === "Employee" || accountData.account_type === "Admin")) {
-    list += '<li><a href="/inv/add-inventory" title="Add a new inventory item">Add Inventory</a></li>'
+    //list += '<li><a href="/inv/add-inventory" title="Add a new inventory item">Add Inventory</a></li>'
   }
   list += "</ul>"
   return list
