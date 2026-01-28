@@ -70,7 +70,7 @@ invCont.buildAddInventory = async (req, res, next) => {
       nav,
       errors: null,
       classificationSelect,
-      vehicle: {} // empty object for sticky form
+      vehicle: {} 
     })
   } catch (err) {
     next(err)

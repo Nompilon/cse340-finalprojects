@@ -82,7 +82,7 @@ async function addInventory(vehicleData) {
     ]
 
     const result = await pool.query(sql, values)
-    return result.rows[0] // return inserted vehicle
+    return result.rows[0] 
   } catch (error) {
     console.error("addInventory error:", error)
     throw error
@@ -99,7 +99,7 @@ async function getInventoryById(inv_id) {
        WHERE i.inv_id = $1`,
       [inv_id]
     )
-    return data.rows[0]  // return a single row
+    return data.rows[0]  
   } catch (error) {
     console.error("getInventoryById error: " + error)
   }

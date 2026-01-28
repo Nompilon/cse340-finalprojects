@@ -93,7 +93,6 @@ validate.addInventoryRules = () => {
       .isInt({ min: 1 })
       .withMessage("Classification must be a valid selection"),
 
-    // Optional fields for image URLs: must be valid URLs if provided
     body("inv_image")
       .optional({ checkFalsy: true })
       .matches(/^(https?:\/\/.+|\/images\/.+)$/)
@@ -128,7 +127,7 @@ validate.checkInventoryData = async (req, res, next) => {
       title: "Add Vehicle",
       nav,
       classificationSelect,
-      errors: result.array(),   // convert validationResult to array
+      errors: result.array(),   
       messages: () => req.flash("notice")
     })
   }
@@ -159,7 +158,7 @@ validate.checkUpdateData = async (req, res, next) => {
       title: "Edit Vehicle",
       nav,
       classificationSelect,
-      errors: result.array(),   // convert validationResult to array
+      errors: result.array(),   
       //messages: () => req.flash("notice"),
       inv_id: req.body.inv_id
     })

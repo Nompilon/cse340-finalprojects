@@ -90,7 +90,7 @@ Util.buildClassificationGrid = async function (data) {
  * Get classification options
  ****************************************** */
 Util.getClassificationOptions = async function () {
-  const data = await invModel.getClassifications(); // returns rows
+  const data = await invModel.getClassifications(); 
   let options = '<option value="">Select a classification</option>'
 
   data.rows.forEach((row) => {
